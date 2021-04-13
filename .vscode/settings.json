@@ -3,6 +3,7 @@
 		"__mutex_base": "cpp",
 		"chrono": "cpp",
 		"ratio": "cpp",
-		"philo_one.h": "c"
+		"philo_one.h": "c",
+		"ostream": "c"
 	}
 }

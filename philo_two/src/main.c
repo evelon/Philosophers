@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:39:15 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/13 22:04:54 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/13 22:42:09 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static int	init_setting(t_setting *setting)
 	setting->dashboard = ft_calloc(setting->num_philo, sizeof(int));
 	if (!setting->dashboard)
 		return (print_err(MALLOC_FAIL) + ERROR);
+	setting->print_sem = sem_open(PRT_SEM_NAME, O_CREAT, S_IRWXU | S_IRWXG, 1);
 	err = pthread_mutex_init(&setting->print_mutex, NULL);
 	if (err)
 	{

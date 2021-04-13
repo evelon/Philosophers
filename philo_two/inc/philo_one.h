@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:34:19 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/13 22:34:13 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/13 22:42:00 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 # include <unistd.h>
 # include <sys/time.h>
 # include <pthread.h>
+# include <fcntl.h>
+# include <sys/stat.h>
+# include <semaphore.h>
 
 # include <stdbool.h>
 # define ERROR -1
@@ -31,19 +34,21 @@
 # define DEAD -99
 # define ALL_ATE -100
 
-# define MUTEX_INIT_FAIL "Failed to initiate mutex"
+# define SEM_OPEN_FAIL "Failed to open semaphore"
 # define MUTEX_CONT_FAIL "Failed to control mutex"
 # define TIME_GET_FAIL "Failed to get current time"
 # define FORK_FAIL "Failed to set forks; code is wrong"
 # define MALLOC_FAIL "Malloc failed"
 # define THR_CREAT_FAIL "Failed to create a thread"
 
+# define PRT_SEM_NAME "print_sem"
+# define FORK_SEM_NAME "fork_sem"
+
 /*
 ** t_setting represents setting of the simulation.
 **
 ** t_philo and t_fork represents state of each philosopher and fork.
 */
-
 typedef struct		s_setting
 {
 	int				num_philo;
@@ -52,7 +57,7 @@ typedef struct		s_setting
 	int				time_slp;
 	int				num_must_eat;
 	struct timeval	start_time;
-	pthread_mutex_t print_mutex;
+	sem_t			print_sem;
 	int				*dashboard;
 	int				table_state;
 }					t_setting;

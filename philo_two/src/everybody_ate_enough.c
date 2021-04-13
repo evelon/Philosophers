@@ -1,28 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ph_print_err.c                                     :+:      :+:    :+:   */
+/*   everybody_ate_enough.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/11 17:10:40 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/12 18:50:26 by jolim            ###   ########.fr       */
+/*   Created: 2021/04/13 21:49:16 by jolim             #+#    #+#             */
+/*   Updated: 2021/04/13 21:57:44 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-int	print_err(char *err_str)
+int	everybody_ate_enough(t_table *table)
 {
-	ft_putendl_fd(err_str, 2);
-	return (false);
-}
+	int	i;
+	int	*ret;
 
-int	print_err_code(char *err_str, int err_code)
-{
-	ft_putstr_fd(err_str, 2);
-	ft_putstr_fd(": error_code ", 2);
-	ft_putlu_fd(err_code, 2);
-	ft_putchar_fd('\n', 2);
-	return (false);
+	pthread_mutex_unlock(&table->setting->print_mutex);
+	i = 0;
+	while (i < table->setting->num_philo)
+	{
+		pthread_join(table->thrds[i++], (void **)&ret);
+		if ((int)ret != ALL_ATE)
+		{
+			print_err("something wrong!!!!");
+			return (ERROR);
+		}
+	}
+	free_table(table, 0);
+	free_setting(table->setting);
+	return (SUCCESS);
 }
