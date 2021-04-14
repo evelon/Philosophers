@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 20:01:14 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/12 18:32:59 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 16:33:15 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,18 +64,10 @@ static int	init_fork_mutex(t_table *table)
 
 void		*free_table(t_table *table, int err_code)
 {
-	int	i;
-
 	free(table->phs);
 	free(table->forks);
 	if (err_code)
 		print_err_code(MUTEX_INIT_FAIL, err_code);
-	if (err_code == 0)
-	{
-		i = 0;
-		while (i < table->setting->num_philo)
-			pthread_mutex_destroy(&table->forks[i++].mutex);
-	}
 	return (NULL);
 }
 

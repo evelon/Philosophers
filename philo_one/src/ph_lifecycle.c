@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 21:56:51 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 11:41:16 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 16:16:48 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ static int	philo_eat_sleep(t_philo *philo)
 	return (err);
 }
 
-int			odd_philo_liftcycle(t_philo *philo)
+int			odd_philo_lifecycle(t_philo *philo)
 {
 	if (take_fork(LEFT, philo) != SUCCESS)
 		return (ERROR);
@@ -104,7 +104,7 @@ int			odd_philo_liftcycle(t_philo *philo)
 	return (philo_eat_sleep(philo));
 }
 
-int			even_philo_liftcycle(t_philo *philo)
+int			even_philo_lifecycle(t_philo *philo)
 {
 	if (take_fork(RIGHT, philo) != SUCCESS)
 		return (ERROR);
