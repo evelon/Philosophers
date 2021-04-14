@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 14:37:20 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 14:30:23 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 18:11:11 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,20 @@ static int	ph_monitor(t_table *table)
 	struct timeval	now;
 	int				err;
 	int				i;
-	int				duration;
+	long			duration;
 
 	err = gettimeofday(&now, NULL);
 	if (err)
 		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
 	i = 0;
+	usleep(50);
 	while (i < table->setting->num_philo)
 	{
 		duration = ph_get_duration(table->phs[i].last_meal, now);
 		if (duration >= table->setting->time_die)
 		{
 			table->setting->status = DEAD;
-			return (print_sem(ph_get_duration(table->setting->start_time, \
+			return (sem_print(ph_get_duration(table->setting->start_time, \
 			now), die, &table->phs[i]));
 		}
 		i++;

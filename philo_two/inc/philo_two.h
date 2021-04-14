@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:34:19 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 15:52:52 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 18:11:04 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@
 typedef struct		s_setting
 {
 	int				num_philo;
-	int				time_die;
-	int				time_eat;
-	int				time_slp;
+	long			time_die;
+	long			time_eat;
+	long			time_slp;
 	int				num_must_eat;
 	struct timeval	start_time;
 	sem_t			*print_sem;
@@ -115,7 +115,7 @@ int					free_setting(t_setting *setting);
 /*
 ** print_sem is a printer. The counter of this function is one.
 */
-int					print_sem(unsigned long ms, int action, t_philo *philo);
+int					sem_print(unsigned long ms, int action, t_philo *philo);
 
 /*
 **
@@ -140,7 +140,7 @@ void				free_table(t_table *table, int err_code);
 /*
 ** ph_get_duration returns how many ms elapsed after 'start'.
 */
-unsigned long		ph_get_duration(struct timeval last, struct timeval now);
+long				ph_get_duration(struct timeval last, struct timeval now);
 void				ph_sleep_precise(int ms);
 
 /*

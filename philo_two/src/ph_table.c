@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 20:01:14 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 16:28:25 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 17:04:58 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,9 @@ int			ph_set_table(t_table *table, t_setting *setting)
 	table->phs = ft_calloc(setting->num_philo, sizeof(t_philo));
 	if (!table->phs)
 		return (ERROR);
-	forks = sem_open(FORK_NAME, O_CREAT | O_EXCL, \
-	S_IRWXU | S_IRWXG, setting->num_philo);
+	sem_unlink(FORK_NAME);
+	forks = sem_open(FORK_NAME, O_CREAT | O_EXCL | O_TRUNC, 0700, \
+	setting->num_philo);
 	if (!forks)
 		return ((int)free_null(table->phs) + ERROR);
 	init_philosophers(table, forks);

@@ -10,7 +10,7 @@ INC_DIR = ./inc/
 SRC = \
 	main.c \
 	ph_fork_action.c \
-	ph_lifecycle.c \
+	ph_eat_sleep_think.c \
 	ph_over.c \
 	ph_philosopher.c \
 	ph_print_err.c \

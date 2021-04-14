@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 21:49:16 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 15:57:42 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 17:42:19 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	ph_over(t_table *table)
 	while (i < table->setting->num_philo)
 	{
 		pthread_join(table->thrds[i++], (void **)&ret);
+		ft_putlu_fd((unsigned long)i, 1);
 		if (ret != NULL)
 		{
 			print_err("something wrong!!!!");

@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 20:14:42 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 15:23:47 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 16:39:20 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ static int	take_fork(t_philo *philo)
 	err = gettimeofday(&now, NULL);
 	if (err)
 		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
-	print_sem(ph_get_duration(philo->setting->start_time, now), \
+	sem_print(ph_get_duration(philo->setting->start_time, now), \
 	take, philo);
 	sem_wait(philo->forks);
 	err = gettimeofday(&now, NULL);
 	if (err)
 		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
-	print_sem(ph_get_duration(philo->setting->start_time, now), \
+	sem_print(ph_get_duration(philo->setting->start_time, now), \
 	eat, philo);
 	return (SUCCESS);
 }
@@ -46,6 +46,6 @@ int			act_on_fork(enum e_action action, t_philo *philo)
 		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
 	sem_post(philo->forks);
 	sem_post(philo->forks);
-	return (print_sem(ph_get_duration(philo->setting->start_time, now), \
+	return (sem_print(ph_get_duration(philo->setting->start_time, now), \
 	slp, philo));
 }
