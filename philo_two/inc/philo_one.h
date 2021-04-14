@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:34:19 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/13 22:42:00 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 10:55:49 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,16 @@
 # define ALL_ATE -100
 
 # define SEM_OPEN_FAIL "Failed to open semaphore"
-# define MUTEX_CONT_FAIL "Failed to control mutex"
+# define SEM_CONT_FAIL "Failed to control semaphore"
+# define SEM_CLOSE_FAIL "Failed to close semaphore"
+# define SEM_UNLINK_FAIL "Failed to unlink semaphore"
 # define TIME_GET_FAIL "Failed to get current time"
 # define FORK_FAIL "Failed to set forks; code is wrong"
 # define MALLOC_FAIL "Malloc failed"
 # define THR_CREAT_FAIL "Failed to create a thread"
 
-# define PRT_SEM_NAME "print_sem"
-# define FORK_SEM_NAME "fork_sem"
+# define PRT_NAME "print_sem"
+# define FORK_NAME "fork_sem"
 
 /*
 ** t_setting represents setting of the simulation.
@@ -87,8 +89,7 @@ typedef struct		s_philo
 	int				index;
 	enum e_philo_st	state;
 	struct timeval	last_meal;
-	t_fork			*left;
-	t_fork			*right;
+	sem_t			*forks;
 	t_setting		*setting;
 }					t_philo;
 
@@ -101,7 +102,6 @@ enum				e_action
 typedef struct		s_table
 {
 	t_philo			*phs;
-	t_fork			*forks;
 	t_setting		*setting;
 	pthread_t		*thrds;
 }					t_table;
@@ -129,11 +129,10 @@ int					odd_philo_liftcycle(t_philo *philo);
 int					even_philo_liftcycle(t_philo *philo);
 
 /*
-** act_on_fork can changes a state of fork. when action is lay and fork is
-** taken, fork can be changed into state laid. when action is take and fork is
-** laid, for can be change into state taken.
+** act_on_fork changes the number of forks, which equals to the value of
+** the corresponding semaphore.
 */
-int					act_on_fork(enum e_action action, t_fork *fork);
+int					act_on_fork(enum e_action action, sem_t *forks);
 
 /*
 ** ph_set_table initializes philosophers and forks

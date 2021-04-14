@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:39:15 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/13 22:04:54 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 10:51:11 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static int	set_philo(t_setting *setting, int argc, char *argv[])
 {
 	setting->num_philo = ft_atoi(argv[1]);
 	if (setting->num_philo < 2)
-		return(ERROR);
+		return (ERROR);
 	setting->time_die = ft_atoi(argv[2]);
 	if (setting->time_die < 1)
 		return (ERROR);
@@ -60,18 +60,6 @@ static int	set_philo(t_setting *setting, int argc, char *argv[])
 	setting->num_must_eat = ft_atoi(argv[5]);
 	if (setting->num_must_eat < 1)
 		return (ERROR);
-	return (SUCCESS);
-}
-
-int			destroy_mutex(t_table *table)
-{
-	int	i;
-
-	free_setting(table->setting);
-	i = 0;
-	while (i < table->setting->num_philo)
-		pthread_mutex_destroy(&table->forks[i++].mutex);
-	free_table(table, 0);
 	return (SUCCESS);
 }
 
@@ -97,6 +85,5 @@ int			main(int argc, char *argv[])
 		free_setting(&setting);
 		return (1);
 	}
-
 	return (0);
 }

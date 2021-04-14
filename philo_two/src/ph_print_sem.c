@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ph_print_mutex.c                                   :+:      :+:    :+:   */
+/*   ph_print_sem.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 16:51:13 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/13 20:45:38 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 10:36:13 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void	print_ms_index(unsigned long ms, int index)
 
 int			print_mutex(unsigned long ms, int action, t_philo *philo)
 {
-	pthread_mutex_lock(&philo->setting->print_mutex);
+	sem_wait(&philo->setting->print_sem);
 	if (philo->setting->table_state == ALL_ATE)
 		return (ALL_ATE);
 	if (action == slp)
@@ -76,6 +76,6 @@ int			print_mutex(unsigned long ms, int action, t_philo *philo)
 		ft_putendl_fd("died", 1);
 		return (DEAD);
 	}
-	pthread_mutex_unlock(&philo->setting->print_mutex);
+	sem_post(&philo->setting->print_sem);
 	return (false);
 }

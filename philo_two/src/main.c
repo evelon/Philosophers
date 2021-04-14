@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:39:15 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/13 22:42:09 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 10:56:22 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ int			free_setting(t_setting *setting)
 {
 	if (setting->dashboard)
 		return ((int)free_null(setting->dashboard));
-	pthread_mutex_destroy(&setting->print_mutex);
+	if (sem_close(&setting->print_sem))
+		return (print_err(SEM_CLOSE_FAIL) + ERROR);
+	if (sem_unlink(PRT_NAME))
+		return (print_err(SEM_UNLINK_FAIL) + ERROR);
 	return (SUCCESS);
 }
 
@@ -28,12 +31,11 @@ static int	init_setting(t_setting *setting)
 	setting->dashboard = ft_calloc(setting->num_philo, sizeof(int));
 	if (!setting->dashboard)
 		return (print_err(MALLOC_FAIL) + ERROR);
-	setting->print_sem = sem_open(PRT_SEM_NAME, O_CREAT, S_IRWXU | S_IRWXG, 1);
-	err = pthread_mutex_init(&setting->print_mutex, NULL);
-	if (err)
+	setting->print_sem = sem_open(PRT_NAME, O_CREAT, S_IRWXU | S_IRWXG, 1);
+	if (setting->print_sem)
 	{
 		free(setting->dashboard);
-		return (print_err_code(MUTEX_INIT_FAIL, err) + ERROR);
+		return (print_err(SEM_OPEN_FAIL) + ERROR);
 	}
 	setting->table_state = WAIT;
 	return (SUCCESS);
@@ -43,7 +45,7 @@ static int	set_philo(t_setting *setting, int argc, char *argv[])
 {
 	setting->num_philo = ft_atoi(argv[1]);
 	if (setting->num_philo < 2)
-		return(ERROR);
+		return (ERROR);
 	setting->time_die = ft_atoi(argv[2]);
 	if (setting->time_die < 1)
 		return (ERROR);
@@ -64,14 +66,12 @@ static int	set_philo(t_setting *setting, int argc, char *argv[])
 	return (SUCCESS);
 }
 
-int			destroy_mutex(t_table *table)
+int			destroy_sem(t_table *table)
 {
 	int	i;
 
 	free_setting(table->setting);
 	i = 0;
-	while (i < table->setting->num_philo)
-		pthread_mutex_destroy(&table->forks[i++].mutex);
 	free_table(table, 0);
 	return (SUCCESS);
 }
