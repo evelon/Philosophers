@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:34:19 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/13 22:34:13 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 11:54:08 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct		s_setting
 	struct timeval	start_time;
 	pthread_mutex_t print_mutex;
 	int				*dashboard;
-	int				table_state;
+	int				status;
 }					t_setting;
 
 typedef enum		e_philo_st
@@ -102,12 +102,15 @@ typedef struct		s_table
 }					t_table;
 
 /*
+** ph_run_thread starts threads and monitors all the threads.
 **
+** ph_over join all the running threads and free all resources.
+**
+** free_setting frees all malloced resources in a setting struct. this fuctions
+** is used in ph_over.
 */
-
 int					ph_run_thread(t_table *table);
-
-int					everybody_ate_enough(t_table *table);
+int					ph_over(t_table *table);
 int					free_setting(t_setting *setting);
 
 /*
@@ -128,16 +131,16 @@ int					even_philo_liftcycle(t_philo *philo);
 ** taken, fork can be changed into state laid. when action is take and fork is
 ** laid, for can be change into state taken.
 */
-int					act_on_fork(enum e_action action, t_fork *fork);
+int					act_on_fork(enum e_action action, t_fork *fork, int stat);
 
 /*
-** ph_set_table initializes philosophers and forks
+** ph_set_table initializes philosophers and forks.
 */
 int					ph_set_table(t_table *table, t_setting *setting);
 void				*free_table(t_table *table, int err_code);
 
 /*
-** ph_get_duration returns how many ms elapsed after 'start'
+** ph_get_duration returns how many ms elapsed after 'start'.
 */
 unsigned long		ph_get_duration(struct timeval last, struct timeval now);
 void				ph_sleep_precise(int ms);

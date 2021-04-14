@@ -6,16 +6,18 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 20:14:42 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/12 15:41:06 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 11:40:17 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-int	act_on_fork(enum e_action action, t_fork *fork)
+int	act_on_fork(enum e_action action, t_fork *fork, int stat)
 {
 	int	err;
 
+	if (stat != DINE)
+		return (SUCCESS);
 	err = pthread_mutex_lock(&fork->mutex);
 	if (err)
 		return (err);

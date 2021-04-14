@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:39:15 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 10:56:22 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 11:50:09 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,7 @@ int			free_setting(t_setting *setting)
 {
 	if (setting->dashboard)
 		return ((int)free_null(setting->dashboard));
-	if (sem_close(&setting->print_sem))
-		return (print_err(SEM_CLOSE_FAIL) + ERROR);
-	if (sem_unlink(PRT_NAME))
-		return (print_err(SEM_UNLINK_FAIL) + ERROR);
+	pthread_mutex_destroy(&setting->print_mutex);
 	return (SUCCESS);
 }
 
@@ -31,13 +28,13 @@ static int	init_setting(t_setting *setting)
 	setting->dashboard = ft_calloc(setting->num_philo, sizeof(int));
 	if (!setting->dashboard)
 		return (print_err(MALLOC_FAIL) + ERROR);
-	setting->print_sem = sem_open(PRT_NAME, O_CREAT, S_IRWXU | S_IRWXG, 1);
-	if (setting->print_sem)
+	err = pthread_mutex_init(&setting->print_mutex, NULL);
+	if (err)
 	{
 		free(setting->dashboard);
-		return (print_err(SEM_OPEN_FAIL) + ERROR);
+		return (print_err_code(MUTEX_INIT_FAIL, err) + ERROR);
 	}
-	setting->table_state = WAIT;
+	setting->status = WAIT;
 	return (SUCCESS);
 }
 
@@ -66,16 +63,6 @@ static int	set_philo(t_setting *setting, int argc, char *argv[])
 	return (SUCCESS);
 }
 
-int			destroy_sem(t_table *table)
-{
-	int	i;
-
-	free_setting(table->setting);
-	i = 0;
-	free_table(table, 0);
-	return (SUCCESS);
-}
-
 int			main(int argc, char *argv[])
 {
 	t_setting	setting;
@@ -92,12 +79,19 @@ int			main(int argc, char *argv[])
 	if (check == ERROR)
 		free_setting(&setting);
 	check = ph_run_thread(&table);
-	if (check == ERROR)
+	if (check != ERROR)
 	{
-		free_table(&table, 0);
+		check = ph_over(&table);
+		system("leaks philo_one > leaks");
+		if (check == ERROR)
+			return (1);
+	}
+	else if (check == ERROR)
+	{
 		free_setting(&setting);
+		free_table(&table, 0);
+		system("leaks philo_one > leaks");
 		return (1);
 	}
-
 	return (0);
 }

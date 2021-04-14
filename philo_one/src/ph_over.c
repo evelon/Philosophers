@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   everybody_ate_enough.c                             :+:      :+:    :+:   */
+/*   ph_over.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 21:49:16 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/13 21:57:44 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 11:48:52 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-int	everybody_ate_enough(t_table *table)
+int	ph_over(t_table *table)
 {
 	int	i;
 	int	*ret;
@@ -22,7 +22,7 @@ int	everybody_ate_enough(t_table *table)
 	while (i < table->setting->num_philo)
 	{
 		pthread_join(table->thrds[i++], (void **)&ret);
-		if ((int)ret != ALL_ATE)
+		if (ret != NULL)
 		{
 			print_err("something wrong!!!!");
 			return (ERROR);

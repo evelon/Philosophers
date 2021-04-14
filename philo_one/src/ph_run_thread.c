@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 14:37:20 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/13 21:54:32 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 11:38:19 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,14 @@ static int	ph_monitor(t_table *table)
 	{
 		duration = ph_get_duration(table->phs[i].last_meal, now);
 		if (duration >= table->setting->time_die)
+		{
+			table->setting->status = DEAD;
 			return (print_mutex(ph_get_duration(table->setting->start_time, \
 			now), die, &table->phs[i]));
+		}
 		i++;
 	}
-	if (table->setting->table_state == ALL_ATE)
+	if (table->setting->status == ALL_ATE)
 		return (ALL_ATE);
 	return (SUCCESS);
 }
@@ -89,6 +92,6 @@ int			ph_run_thread(t_table *table)
 	err = gettimeofday(&table->setting->start_time, NULL);
 	if (err)
 		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
-	table->setting->table_state = DINE;
+	table->setting->status = DINE;
 	return (ph_start_table(table));
 }

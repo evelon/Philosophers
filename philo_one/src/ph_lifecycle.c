@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 21:56:51 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/13 22:19:30 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 11:41:16 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ static int	take_fork(int hand, t_philo *philo)
 	while (1)
 	{
 		if (hand == RIGHT)
-			err = act_on_fork(take, philo->right);
+			err = act_on_fork(take, philo->right, philo->setting->status);
 		else
-			err = act_on_fork(take, philo->left);
+			err = act_on_fork(take, philo->left, philo->setting->status);
 		if (err == SUCCESS)
 		{
 			err = gettimeofday(&now, NULL);
@@ -30,11 +30,11 @@ static int	take_fork(int hand, t_philo *philo)
 				return (print_err_code(TIME_GET_FAIL, err) + ERROR);
 			if ((philo->index % 2 == 1 && hand == LEFT) || \
 				(philo->index % 2 == 0 && hand == RIGHT))
-				print_mutex(ph_get_duration(philo->setting->start_time, now), \
-				take, philo);
+				return (print_mutex(ph_get_duration(philo->setting->start_time,\
+				 now), take, philo));
 			else
-				print_mutex(ph_get_duration(philo->setting->start_time, now), \
-				eat, philo);
+				return (print_mutex(ph_get_duration(philo->setting->start_time,\
+				 now), eat, philo));
 			break;
 		}
 		if (err != FAIL)
@@ -51,14 +51,14 @@ static int	lay_fork(t_philo *philo)
 	count = 0;
 	while (1)
 	{
-		err = act_on_fork(lay, philo->left);
+		err = act_on_fork(lay, philo->left, philo->setting->status);
 		if (err == ERROR)
 			return (print_err(FORK_FAIL) + ERROR);
 		else
 			count++;
 		if (count == 2)
 			return (SUCCESS);
-		err = act_on_fork(lay, philo->right);
+		err = act_on_fork(lay, philo->right, philo->setting->status);
 		if (err == ERROR)
 			return (print_err(FORK_FAIL) + ERROR);
 		else
@@ -82,15 +82,17 @@ static int	philo_eat_sleep(t_philo *philo)
 	err = gettimeofday(&now, NULL);
 	if (err)
 		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
-	if (print_mutex(ph_get_duration(philo->setting->start_time, now), \
-	slp, philo) == ALL_ATE)
-		return (ALL_ATE);
+	err = print_mutex(ph_get_duration(philo->setting->start_time, now), \
+	slp, philo);
+	if (err != SUCCESS)
+		return (err);
 	ph_sleep_precise(philo->setting->time_slp);
 	err = gettimeofday(&now, NULL);
 	if (err)
 		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
-	print_mutex(ph_get_duration(philo->setting->start_time, now), think, philo);
-	return (SUCCESS);
+	err = print_mutex(ph_get_duration(philo->setting->start_time, now), \
+	think, philo);
+	return (err);
 }
 
 int			odd_philo_liftcycle(t_philo *philo)

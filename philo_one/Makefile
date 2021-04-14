@@ -8,10 +8,10 @@ all: $(NAME)
 INC_DIR = ./inc/
 
 SRC = \
-	everybody_ate_enough.c \
 	main.c \
 	ph_fork_action.c \
 	ph_lifecycle.c \
+	ph_over.c \
 	ph_philosopher.c \
 	ph_print_err.c \
 	ph_print_mutex.c \
@@ -32,7 +32,7 @@ OBJS = $(addprefix $(OBJS_DIR), $(OBJ))
 CC = gcc
 MKDIR = mkdir
 
-CFLAGS = -Wall -Werror -Wextra -pthread $(DEBUGF)
+CFLAGS = -Wall -Werror -Wextra -pthread #$(DEBUGF)
 DEBUGF = -g3 -fsanitize=address
 IFLAGS = -I$(INC_DIR)
 
