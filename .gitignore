@@ -6,6 +6,9 @@ philo_one/philo_one
 philo_two/philo_two
 philo_three/philo_three
 
+# leaks
+leaks
+
 # Created by https://www.toptal.com/developers/gitignore/api/c
 # Edit at https://www.toptal.com/developers/gitignore?templates=c
 

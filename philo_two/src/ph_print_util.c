@@ -6,11 +6,11 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 17:23:59 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/12 18:50:11 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 12:45:59 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 void		ft_putchar_fd(char c, int fd)
 {

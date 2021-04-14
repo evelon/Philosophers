@@ -6,11 +6,11 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 14:37:20 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 11:38:19 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 14:30:23 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 static int	ph_monitor(t_table *table)
 {
@@ -29,7 +29,7 @@ static int	ph_monitor(t_table *table)
 		if (duration >= table->setting->time_die)
 		{
 			table->setting->status = DEAD;
-			return (print_mutex(ph_get_duration(table->setting->start_time, \
+			return (print_sem(ph_get_duration(table->setting->start_time, \
 			now), die, &table->phs[i]));
 		}
 		i++;

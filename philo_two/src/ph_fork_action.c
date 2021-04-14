@@ -6,38 +6,46 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 20:14:42 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 11:40:17 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 15:23:47 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
-int	act_on_fork(enum e_action action, t_fork *fork, int stat)
+static int	take_fork(t_philo *philo)
 {
-	int	err;
+	struct timeval	now;
+	int				err;
 
-	if (stat != DINE)
-		return (SUCCESS);
-	err = pthread_mutex_lock(&fork->mutex);
+	sem_wait(philo->forks);
+	err = gettimeofday(&now, NULL);
 	if (err)
-		return (err);
+		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
+	print_sem(ph_get_duration(philo->setting->start_time, now), \
+	take, philo);
+	sem_wait(philo->forks);
+	err = gettimeofday(&now, NULL);
+	if (err)
+		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
+	print_sem(ph_get_duration(philo->setting->start_time, now), \
+	eat, philo);
+	return (SUCCESS);
+}
+
+int			act_on_fork(enum e_action action, t_philo *philo)
+{
+	struct timeval	now;
+	int				err;
+
+	if (philo->setting->status != DINE)
+		return (SUCCESS);
 	if (action == take)
-	{
-		if (fork->state == taken)
-		{
-			err = pthread_mutex_unlock(&fork->mutex);
-			if (err)
-				return (err);
-			return (FAIL);
-		}
-		fork->state = taken;
-		return (pthread_mutex_unlock(&fork->mutex));
-	}
-	if (fork->state == laid)
-	{
-		pthread_mutex_unlock(&fork->mutex);
-		return (ERROR);
-	}
-	fork->state = laid;
-	return (pthread_mutex_unlock(&fork->mutex));
+		return (take_fork(philo));
+	err = gettimeofday(&now, NULL);
+	if (err)
+		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
+	sem_post(philo->forks);
+	sem_post(philo->forks);
+	return (print_sem(ph_get_duration(philo->setting->start_time, now), \
+	slp, philo));
 }

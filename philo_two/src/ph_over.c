@@ -6,18 +6,18 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 21:49:16 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 11:48:52 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 15:57:42 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
+#include <stdio.h>
 
 int	ph_over(t_table *table)
 {
 	int	i;
 	int	*ret;
 
-	pthread_mutex_unlock(&table->setting->print_mutex);
 	i = 0;
 	while (i < table->setting->num_philo)
 	{

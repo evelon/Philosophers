@@ -6,11 +6,11 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 21:45:01 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/13 19:54:35 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 12:55:21 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 unsigned long	ph_get_duration(struct timeval last, struct timeval now)
 {

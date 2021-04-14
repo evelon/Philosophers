@@ -14,7 +14,7 @@ SRC = \
 	ph_over.c \
 	ph_philosopher.c \
 	ph_print_err.c \
-	ph_print_mutex.c \
+	ph_print_sem.c \
 	ph_print_util.c \
 	ph_run_thread.c \
 	ph_table.c \
@@ -32,7 +32,7 @@ OBJS = $(addprefix $(OBJS_DIR), $(OBJ))
 CC = gcc
 MKDIR = mkdir
 
-CFLAGS = -Wall -Werror -Wextra -pthread $(DEBUGF)
+CFLAGS = -Wall -Werror -Wextra -pthread #$(DEBUGF)
 DEBUGF = -g3 -fsanitize=address
 IFLAGS = -I$(INC_DIR)
 

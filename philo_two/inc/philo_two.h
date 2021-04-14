@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_one.h                                        :+:      :+:    :+:   */
+/*   philo_two.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:34:19 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 11:54:06 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 15:52:52 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@
 # define ALL_ATE -100
 
 # define SEM_OPEN_FAIL "Failed to open semaphore"
-# define SEM_CONT_FAIL "Failed to control semaphore"
 # define SEM_CLOSE_FAIL "Failed to close semaphore"
 # define SEM_UNLINK_FAIL "Failed to unlink semaphore"
 # define TIME_GET_FAIL "Failed to get current time"
@@ -43,8 +42,8 @@
 # define MALLOC_FAIL "Malloc failed"
 # define THR_CREAT_FAIL "Failed to create a thread"
 
-# define PRT_NAME "print_sem"
-# define FORK_NAME "fork_sem"
+# define PRT_NAME "/print_sem"
+# define FORK_NAME "/fork_sem"
 
 /*
 ** t_setting represents setting of the simulation.
@@ -59,9 +58,9 @@ typedef struct		s_setting
 	int				time_slp;
 	int				num_must_eat;
 	struct timeval	start_time;
-	sem_t			print_sem;
+	sem_t			*print_sem;
 	int				*dashboard;
-	int				table_state;
+	int				status;
 }					t_setting;
 
 typedef enum		e_philo_st
@@ -77,12 +76,6 @@ enum				e_fork_st
 	laid = die + 1,
 	taken
 };
-
-typedef struct		s_fork
-{
-	enum e_fork_st	state;
-	pthread_mutex_t	mutex;
-}					t_fork;
 
 typedef struct		s_philo
 {
@@ -120,30 +113,29 @@ int					ph_over(t_table *table);
 int					free_setting(t_setting *setting);
 
 /*
-** print_mutex is a mutexed printer, which only can be used by one thread only.
+** print_sem is a printer. The counter of this function is one.
 */
-int					print_mutex(unsigned long ms, int action, t_philo *philo);
+int					print_sem(unsigned long ms, int action, t_philo *philo);
 
 /*
 **
 */
 void				*odd_philo(void *philo);
 void				*even_philo(void *philo);
-int					odd_philo_liftcycle(t_philo *philo);
-int					even_philo_liftcycle(t_philo *philo);
+int					philo_liftcycle(t_philo *philo);
 
 /*
 ** act_on_fork can changes a state of fork. when action is lay and fork is
 ** taken, fork can be changed into state laid. when action is take and fork is
 ** laid, for can be change into state taken.
 */
-int					act_on_fork(enum e_action action, t_fork *fork, int stat);
+int					act_on_fork(enum e_action action, t_philo *philo);
 
 /*
 ** ph_set_table initializes philosophers and forks.
 */
 int					ph_set_table(t_table *table, t_setting *setting);
-void				*free_table(t_table *table, int err_code);
+void				free_table(t_table *table, int err_code);
 
 /*
 ** ph_get_duration returns how many ms elapsed after 'start'.

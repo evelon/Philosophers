@@ -6,11 +6,11 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 17:15:46 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/12 18:23:05 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 12:55:24 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 static int	isspace(char c)
 {

@@ -6,11 +6,11 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 17:10:40 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/12 18:50:26 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 12:45:50 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 int	print_err(char *err_str)
 {

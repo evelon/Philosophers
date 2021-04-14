@@ -6,33 +6,35 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:39:15 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 11:50:09 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 15:56:07 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 #include <stdio.h>
 
 int			free_setting(t_setting *setting)
 {
 	if (setting->dashboard)
 		return ((int)free_null(setting->dashboard));
-	pthread_mutex_destroy(&setting->print_mutex);
+	if (sem_close(setting->print_sem))
+		return (print_err(SEM_CLOSE_FAIL) + ERROR);
+	if (sem_unlink(PRT_NAME))
+		return(print_err(SEM_UNLINK_FAIL) + ERROR);
 	return (SUCCESS);
 }
 
 static int	init_setting(t_setting *setting)
 {
-	int	err;
-
 	setting->dashboard = ft_calloc(setting->num_philo, sizeof(int));
 	if (!setting->dashboard)
 		return (print_err(MALLOC_FAIL) + ERROR);
-	err = pthread_mutex_init(&setting->print_mutex, NULL);
-	if (err)
+	setting->print_sem = sem_open(PRT_NAME, O_CREAT | O_EXCL, \
+	S_IRWXU | S_IRWXG, 1);
+	if (!setting->print_sem)
 	{
 		free(setting->dashboard);
-		return (print_err_code(MUTEX_INIT_FAIL, err) + ERROR);
+		return (print_err(SEM_OPEN_FAIL) + ERROR);
 	}
 	setting->status = WAIT;
 	return (SUCCESS);
@@ -82,7 +84,7 @@ int			main(int argc, char *argv[])
 	if (check != ERROR)
 	{
 		check = ph_over(&table);
-		system("leaks philo_one > leaks");
+		system("leaks philo_two > leaks");
 		if (check == ERROR)
 			return (1);
 	}
@@ -90,7 +92,7 @@ int			main(int argc, char *argv[])
 	{
 		free_setting(&setting);
 		free_table(&table, 0);
-		system("leaks philo_one > leaks");
+		system("leaks philo_two > leaks");
 		return (1);
 	}
 	return (0);

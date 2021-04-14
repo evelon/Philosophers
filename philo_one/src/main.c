@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:39:15 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 11:50:09 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/14 12:01:20 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,19 +79,14 @@ int			main(int argc, char *argv[])
 	if (check == ERROR)
 		free_setting(&setting);
 	check = ph_run_thread(&table);
-	if (check != ERROR)
-	{
-		check = ph_over(&table);
-		system("leaks philo_one > leaks");
-		if (check == ERROR)
-			return (1);
-	}
-	else if (check == ERROR)
+	if (check == ERROR)
 	{
 		free_setting(&setting);
 		free_table(&table, 0);
-		system("leaks philo_one > leaks");
 		return (1);
 	}
+	check = ph_over(&table);
+	if (check == ERROR)
+		return (1);
 	return (0);
 }
