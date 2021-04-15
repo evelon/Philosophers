@@ -6,11 +6,12 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 14:07:14 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 18:16:38 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 18:24:17 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_three.h"
+#include <stdio.h>
 
 void	*ph_kill_monitor(void *param_table)
 {
@@ -48,11 +49,7 @@ void	*ph_monitor(void *param_table)
 	table = (t_table *)param_table;
 	i = 0;
 	while (i < table->setting->num_philo)
-	{
-		// ft_putlu_fd((unsigned long)i, 1);
-		// ft_putlu_fd((unsigned long)table->phs[i].done, 1);
 		sem_wait(table->phs[i++].done);
-	}
 	ph_kill_process(table->pids, table->setting->num_philo);
 	return (SUCCESS);
 }
