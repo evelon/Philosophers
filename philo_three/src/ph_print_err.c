@@ -1,33 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ph_over.c                                          :+:      :+:    :+:   */
+/*   ph_print_err.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/13 21:49:16 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 12:54:59 by jolim            ###   ########.fr       */
+/*   Created: 2021/04/11 17:10:40 by jolim             #+#    #+#             */
+/*   Updated: 2021/04/15 14:34:08 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_two.h"
+#include "philo_three.h"
 
-int	ph_over(t_table *table)
+int	print_err(char *err_str)
 {
-	int	i;
-	int	*ret;
+	ft_putendl_fd(err_str, 2);
+	return (false);
+}
 
-	i = 0;
-	while (i < table->setting->num_philo)
-	{
-		pthread_join(table->thrds[i++], (void **)& ret);
-		if (ret != NULL)
-		{
-			print_err("something wrong!!!!");
-			return (ERROR);
-		}
-	}
-	free_table(table, 0);
-	free_setting(table->setting);
-	return (SUCCESS);
+int	print_err_code(char *err_str, int err_code)
+{
+	ft_putstr_fd(err_str, 2);
+	ft_putstr_fd(": error_code ", 2);
+	ft_putlu_fd(err_code, 2);
+	ft_putchar_fd('\n', 2);
+	return (false);
 }

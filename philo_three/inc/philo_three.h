@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_two.h                                        :+:      :+:    :+:   */
+/*   philo_three.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:34:19 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 14:08:59 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 15:12:56 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_THREE_H
-# define PHILO_THREe_H
+# define PHILO_THREE_H
 
 # include <string.h>
 # include <stdlib.h>
@@ -21,6 +21,8 @@
 # include <fcntl.h>
 # include <sys/stat.h>
 # include <semaphore.h>
+# include <sys/wait.h>
+# include <signal.h>
 
 # include <stdbool.h>
 # define ERROR -1
@@ -36,12 +38,15 @@
 # define SEM_CLOSE_FAIL "Failed to close semaphore"
 # define SEM_UNLINK_FAIL "Failed to unlink semaphore"
 # define TIME_GET_FAIL "Failed to get current time"
-# define FORK_FAIL "Failed to create forks"
+# define P_FORK_FAIL "Failed to fork a process"
+# define P_KILL_FAIL "Failed to kill a process"
 # define MALLOC_FAIL "Malloc failed"
 # define THR_CREAT_FAIL "Failed to create a thread"
+# define THR_JOIN_FAIL "Failed to join to a thread"
 
 # define PRT_NAME "/print_sem"
 # define FORK_NAME "/fork_sem"
+# define START_NAME "/start_sem"
 
 /*
 ** t_setting represents setting of the simulation.
@@ -57,8 +62,6 @@ typedef struct		s_setting
 	int				num_must_eat;
 	struct timeval	start_time;
 	sem_t			*print_sem;
-	int				*dashboard;
-	int				status;
 }					t_setting;
 
 typedef enum		e_philo_st
@@ -75,6 +78,7 @@ typedef struct		s_philo
 	enum e_philo_st	state;
 	struct timeval	last_meal;
 	sem_t			*forks;
+	sem_t			*done;
 	t_setting		*setting;
 }					t_philo;
 
@@ -88,18 +92,25 @@ typedef struct		s_table
 {
 	t_philo			*phs;
 	t_setting		*setting;
-	pthread_t		*thrds;
+	pid_t			*pids;
 }					t_table;
 
 /*
-** ph_run_thread starts threads and monitors all the threads.
+** ph_kill_process kills first n processes of pids.
+** ph_run_process forks philosopher processes.
 **
-** ph_over join all the running threads and free all resources.
-**
-** free_setting frees all malloced resources in a setting struct. this fuctions
-** is used in ph_over.
+** ph_monitor needs its own thread on main process, and will check whether all
+** the philosophers ate enough, or if any of the philosophers died.
+** ph_killer will be run on a philosopher process and will be run as a thread.
+** it kills the corresponding philosopher if it starved.
 */
-int					ph_run_thread(t_table *table);
+
+int					ph_kill_process(pid_t *pids, int n);
+int					ph_run_process(t_table *table, sem_t *start);
+
+void				*ph_monitor(void *param_table);
+void				*ph_killer(void *param);
+
 
 int					ph_over(t_table *table);
 int					free_setting(t_setting *setting);
@@ -110,11 +121,11 @@ int					free_setting(t_setting *setting);
 int					sem_print(unsigned long ms, int action, t_philo *philo);
 
 /*
-**
+** philo_process is the function first run after philosopher forked. it starts
+** ph_killer and philosopher lifecycle.
 */
-void				*odd_philo(void *philo);
-void				*even_philo(void *philo);
-int					philo_liftcycle(t_philo *philo);
+
+int					philo_process(t_philo *philo, sem_t *start);
 
 /*
 ** act_on_fork can changes a state of fork. when action is lay and fork is

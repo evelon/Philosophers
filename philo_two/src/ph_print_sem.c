@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 16:51:13 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 18:22:14 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 10:19:47 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,9 @@ static int	has_all_eaten(t_philo *philo)
 		return (false);
 	philo->setting->dashboard[philo->index]++;
 	if (smallest_number(philo->setting->dashboard, philo->setting->num_philo) \
-	>= philo->setting->num_must_eat)
+	 >= philo->setting->num_must_eat)
 	{
 		philo->setting->status = ALL_ATE;
-		sem_post(philo->setting->print_sem);
 		return (true);
 	}
 	return (false);
@@ -72,22 +71,22 @@ int			sem_print(unsigned long ms, int action, t_philo *philo)
 	if (action == die)
 	{
 		print_ms_index(ms, philo->index, die);
-		return (DEAD);
+		return (sem_post(philo->setting->print_sem) + DEAD);
 	}
 	if (philo->setting->status != DINE)
 	{
-		sem_post(philo->setting->print_sem);
-		return (philo->setting->status);
+		sem_post(philo->forks);
+		return (sem_post(philo->setting->print_sem) + philo->setting->status);
 	}
 	if (action == slp)
 		if (has_all_eaten(philo))
-			return (ALL_ATE);
+			return (sem_post(philo->setting->print_sem) + ALL_ATE);
 	print_ms_index(ms, philo->index, action);
 	err = gettimeofday(&now, NULL);
 	if (err)
-		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
+		return (sem_post(philo->setting->print_sem) + \
+		print_err_code(TIME_GET_FAIL, err) + ERROR);
 	if (action == eat)
 		philo->last_meal = now;
-	sem_post(philo->setting->print_sem);
-	return (SUCCESS);
+	return (sem_post(philo->setting->print_sem));
 }

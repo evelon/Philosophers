@@ -1,46 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ph_print_mutex.c                                   :+:      :+:    :+:   */
+/*   ph_print_sem.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 16:51:13 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 12:54:47 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 14:44:50 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
-
-static int	smallest_number(int *list, int size)
-{
-	int	i;
-	int	smaller;
-
-	i = 0;
-	smaller = INT32_MAX;
-	while (i < size)
-	{
-		if (smaller > list[i])
-			smaller = list[i];
-		i++;
-	}
-	return (smaller);
-}
-
-static int	has_all_eaten(t_philo *philo)
-{
-	if (philo->setting->num_must_eat == -1)
-		return (false);
-	philo->setting->dashboard[philo->index]++;
-	if (smallest_number(philo->setting->dashboard, philo->setting->num_philo) \
-	>= philo->setting->num_must_eat)
-	{
-		philo->setting->status = ALL_ATE;
-		return (true);
-	}
-	return (false);
-}
+#include "philo_three.h"
 
 static void	print_ms_index(unsigned long ms, int index, int action)
 {
@@ -62,31 +32,26 @@ static void	print_ms_index(unsigned long ms, int index, int action)
 		ft_putendl_fd("has taken a fork", 1);
 }
 
-int			print_mutex(unsigned long ms, int action, t_philo *philo)
+int			sem_print(unsigned long ms, int action, t_philo *philo)
 {
 	struct timeval	now;
 	int				err;
 
-	pthread_mutex_lock(&philo->setting->print_mutex);
+	sem_wait(philo->setting->print_sem);
 	if (action == die)
 	{
-		print_ms_index(ms, philo->index, action);
+		philo->state = die;
+		print_ms_index(ms, philo->index, die);
 		return (DEAD);
 	}
-	if (philo->setting->status != DINE)
-	{
-		pthread_mutex_unlock(&philo->setting->print_mutex);
-		return (philo->setting->status);
-	}
-	if (action == slp)
-		if (has_all_eaten(philo))
-			return (ALL_ATE);
+	if (action == slp && philo->setting->num_must_eat > 0)
+		sem_post(philo->done);
 	print_ms_index(ms, philo->index, action);
 	err = gettimeofday(&now, NULL);
 	if (err)
-		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
+		return (sem_post(philo->setting->print_sem) + \
+		print_err_code(TIME_GET_FAIL, err) + ERROR);
 	if (action == eat)
 		philo->last_meal = now;
-	pthread_mutex_unlock(&philo->setting->print_mutex);
-	return (SUCCESS);
+	return (sem_post(philo->setting->print_sem));
 }

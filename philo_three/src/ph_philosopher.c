@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ph_lifecycle.c                                     :+:      :+:    :+:   */
+/*   ph_philosopher.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/10 21:56:51 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 10:34:28 by jolim            ###   ########.fr       */
+/*   Created: 2021/04/11 21:41:36 by jolim             #+#    #+#             */
+/*   Updated: 2021/04/15 14:41:27 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_two.h"
+#include "philo_three.h"
 
 static int	philo_eat_sleep(t_philo *philo)
 {
@@ -33,9 +33,37 @@ static int	philo_eat_sleep(t_philo *philo)
 	return (err);
 }
 
-int			philo_liftcycle(t_philo *philo)
+static int	philo_liftcycle(t_philo *philo)
 {
 	if (act_on_fork(take, philo))
 		return (ERROR);
 	return (philo_eat_sleep(philo));
+}
+
+static int	run_philo(t_philo *philo, sem_t *start_sem)
+{
+	sem_wait(start_sem);
+	philo->last_meal = philo->setting->start_time;
+	if (philo->index % 2 == 0)
+		usleep(50);
+	while (1)
+		if (philo_liftcycle(philo) != SUCCESS)
+			break ;
+	return (SUCCESS);
+}
+
+int			philo_process(t_philo *philo, sem_t *start)
+{
+	pthread_t	killer;
+	void		*ret;
+	int			err;
+
+	err = pthread_create(&killer, NULL, ph_killer, philo);
+	if (err)
+		return (print_err_code(THR_CREAT_FAIL, err) + ERROR);
+	err = run_philo(philo, start);
+	pthread_join(killer, &ret);
+	if (ret != NULL)
+		return (print_err("Something wrong!!!") + ERROR);
+	return (err);
 }
