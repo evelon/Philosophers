@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:34:19 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 16:56:44 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 18:09:58 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,5 +168,6 @@ int					ft_atoi(const char *str);
 void				*ft_calloc(size_t count, size_t size);
 void				*free_null(void *ptr);
 int					ft_strlen(char *str);
+char				*ft_itoa(long long n);
 
 #endif

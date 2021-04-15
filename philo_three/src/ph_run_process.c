@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 12:58:54 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 17:22:20 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 18:06:03 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,11 @@
 
 int			ph_kill_process(pid_t *pids, int n)
 {
-	int	wstatus;
 	int	i;
-	int	err;
 
 	i = 0;
 	while (i < n)
-	{
-		if (waitpid(pids[i], &wstatus, WNOHANG) == -1 || WIFEXITED(wstatus))
-			continue ;
-		err = kill(pids[i++], SIGKILL);
-		if (err)
-			return (print_err(P_KILL_FAIL) + ERROR);
-	}
+		kill(pids[i++], SIGKILL);
 	return (SUCCESS);
 }
 
@@ -44,25 +36,30 @@ static int	set_start_time(t_setting *setting)
 
 static int	init_sem(sem_t *start, sem_t *killer, t_setting *setting)
 {
-	struct timeval	now;
-	int				err;
-	long			duration;
+	// struct timeval	now;
+	// int				err;
+	// long			duration;
 	int				i;
 
-	err = gettimeofday(&now, NULL);
-	if (err)
-		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
-	duration = ph_get_duration(setting->start_time, now);
+	// err = gettimeofday(&now, NULL);
+	// if (err)
+	// 	return (print_err_code(TIME_GET_FAIL, err) + ERROR);
+	// duration = ph_get_duration(setting->start_time, now);
+	// i = 0;
+	// while (i < duration)
+	// {
+	// 	sem_post(setting->elapsed_time);
+	// 	i++;
+	// }
 	i = 0;
-	while (i < duration)
+	while (i < setting->num_philo)
 	{
-		sem_post(setting->elapsed_time);
+		sem_post(start);
 		i++;
 	}
 	i = 0;
 	while (i < setting->num_philo)
 	{
-		sem_post(start);
 		sem_post(killer);
 		i++;
 	}

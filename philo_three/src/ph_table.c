@@ -6,46 +6,16 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 20:01:14 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 17:20:01 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 18:11:18 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_three.h"
 
-static char	*done_name(int n)
-{
-	int		scale;
-	int		len;
-	int		temp;
-	char	*name;
-	int		i;
-
-	temp = n / 10;
-	len = 1;
-	scale = 1;
-	while (temp /= 10)
-	{
-		len++;
-		scale *= 10;
-	}
-	name = ft_calloc(scale + 2, sizeof(char));
-	name[0] = '/';
-	i = 1;
-	while (i < len + 1)
-	{
-		name[i++] = n / scale + '0';
-		n -= n / scale * scale;
-		scale /= 10;
-	}
-	name[i] = '\0';
-	write(1, name, len + 1);
-	return (name);
-}
-
 static int	init_philosophers(t_table *table, sem_t *forks, sem_t *killer)
 {
 	int		i;
-	char	*phs_done_name;
+	char	*phs_done;
 
 	i = 0;
 	while (i < table->setting->num_philo)
@@ -56,9 +26,9 @@ static int	init_philosophers(t_table *table, sem_t *forks, sem_t *killer)
 		table->phs[i].killer = killer;
 		if (table->setting->num_must_eat > 0)
 		{
-			phs_done_name = done_name(i);
-			sem_unlink(phs_done_name);
-			table->phs[i].done = sem_open(phs_done_name, \
+			phs_done = ft_itoa(i);
+			sem_unlink(phs_done);
+			table->phs[i].done = sem_open(phs_done, \
 			O_CREAT | O_EXCL | O_TRUNC, 0777, 0);
 		}
 		i++;

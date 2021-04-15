@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 16:51:13 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 17:27:30 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 17:57:13 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,16 @@ static void	print_ms_index(unsigned long ms, int index, int action)
 		ft_putendl_fd("has taken a fork", 1);
 }
 
+static int	eat_count(t_philo *philo)
+{
+	static int 	count = 0;
+
+	count++;
+	if (count >= philo->setting->num_must_eat)
+		sem_post(philo->done);
+	return (SUCCESS);
+}
+
 int			sem_print(unsigned long ms, int action, t_philo *philo)
 {
 	struct timeval	now;
@@ -46,7 +56,7 @@ int			sem_print(unsigned long ms, int action, t_philo *philo)
 		return (DEAD);
 	}
 	if (action == slp && philo->setting->num_must_eat > 0)
-		sem_post(philo->done);
+		eat_count(philo);
 	print_ms_index(ms, philo->index, action);
 	err = gettimeofday(&now, NULL);
 	if (err)
