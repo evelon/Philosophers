@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 12:58:54 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 18:26:26 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 22:36:54 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ static int	init_sem(sem_t *start, sem_t *killer, t_setting *setting)
 		i++;
 	}
 	i = 0;
+	usleep(1000);
 	while (i < setting->num_philo)
 	{
 		sem_post(killer);
@@ -88,5 +89,5 @@ int			ph_run_process(t_table *table, sem_t *start)
 	}
 	if (init_sem(start, table->phs->killer, table->setting))
 		return (ERROR);
-	return (SUCCESS);
+	return (ph_monitor(table));
 }

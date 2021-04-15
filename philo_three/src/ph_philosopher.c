@@ -6,11 +6,37 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 21:41:36 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 17:53:46 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 22:39:13 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_three.h"
+
+static void	*ph_killer(void *param_philo)
+{
+	t_philo			*philo;
+	struct timeval	now;
+	int				err;
+
+	philo = (t_philo *)param_philo;
+	sem_wait(philo->killer);
+	while (1)
+	{
+		usleep(50);
+		if (philo->state == die)
+			return (NULL);
+		err = gettimeofday(&now, NULL);
+		if (err)
+			return ((void *)(long long)print_err(TIME_GET_FAIL));
+		if (ph_get_duration(philo->last_meal, now) >= philo->setting->time_die)
+		{
+			sem_print(ph_get_duration(philo->setting->start_time, \
+			now), die, philo);
+			exit(0);
+		}
+	}
+	return (NULL);
+}
 
 static int	philo_eat_sleep(t_philo *philo)
 {
@@ -45,7 +71,6 @@ static int	run_philo(t_philo *philo, sem_t *start_sem)
 	// int				err;
 
 	sem_wait(start_sem);
-	// usleep((philo->setting->num_philo - philo->index) * 100);
 	// err = gettimeofday(&now, NULL);
 	// if (err)
 	// 	return (print_err_code(TIME_GET_FAIL, err) + ERROR);

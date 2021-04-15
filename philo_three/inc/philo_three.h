@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:34:19 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 18:09:58 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 22:29:58 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@
 # define FORK_NAME "/fork_sem"
 # define START_NAME "/start_sem"
 # define KILLER_NAME "/killer_sem"
-# define TIME_NAME "/time_sem"
+# define DONE_NAME "/done_sem"
 
 /*
 ** t_setting represents setting of the simulation.
@@ -64,7 +64,7 @@ typedef struct		s_setting
 	int				num_must_eat;
 	struct timeval	start_time;
 	sem_t			*print_sem;
-	sem_t			*elapsed_time;
+	sem_t			*done_sem;
 }					t_setting;
 
 typedef enum		e_philo_st
@@ -81,7 +81,6 @@ typedef struct		s_philo
 	enum e_philo_st	state;
 	struct timeval	last_meal;
 	sem_t			*forks;
-	sem_t			*done;
 	sem_t			*killer;
 	t_setting		*setting;
 }					t_philo;
@@ -97,23 +96,24 @@ typedef struct		s_table
 	t_philo			*phs;
 	t_setting		*setting;
 	pid_t			*pids;
+	pid_t			done_monitor;
 }					t_table;
 
 /*
 ** ph_kill_process kills first n processes of pids.
-** ph_run_process forks philosopher processes.
-**
-** ph_monitor needs its own thread on main process, and will check whether all
-** the philosophers ate enough, or if any of the philosophers died.
-** ph_killer will be run on a philosopher process and will be run as a thread.
-** it kills the corresponding philosopher if it starved.
 */
-
 int					ph_kill_process(pid_t *pids, int n);
+
+/*
+** ph_run_process forks philosopher processes.
+*/
 int					ph_run_process(t_table *table, sem_t *start);
 
-void				*ph_monitor(void *param_table);
-void				*ph_killer(void *param);
+/*
+** ph_monitor, if it needs, makes a child process to check wheter philosophers
+** ate enough, and makes a thread for checking if any of philosophers died.
+*/
+int					ph_monitor(t_table *table);
 
 
 int					ph_over(t_table *table);

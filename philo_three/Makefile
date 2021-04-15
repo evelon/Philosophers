@@ -19,8 +19,7 @@ SRC = \
 	ph_run_process.c \
 	ph_table.c \
 	ph_time.c \
-	ph_util.c \
-	ph_util2.c
+	ph_util.c
 SRC_DIR = src
 SRCS_DIR = ./$(SRC_DIR)/
 SRCS = $(addprefix $(SRCS_DIR), $(SRC))
@@ -33,7 +32,7 @@ OBJS = $(addprefix $(OBJS_DIR), $(OBJ))
 CC = gcc
 MKDIR = mkdir
 
-CFLAGS = -Wall -Werror -Wextra -pthread $(DEBUGF)
+CFLAGS = -Wall -Werror -Wextra -pthread #$(DEBUGF)
 DEBUGF = -g3 -fsanitize=address
 IFLAGS = -I$(INC_DIR)
 

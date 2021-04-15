@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:39:15 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 17:51:22 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 22:38:15 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,11 @@ static int	init_setting(t_setting *setting)
 		0700, 1);
 	if (!setting->print_sem)
 		return (print_err(SEM_OPEN_FAIL) + ERROR);
-	// sem_unlink(TIME_NAME);
-	// setting->elapsed_time = sem_open(TIME_NAME, O_CREAT | O_EXCL | O_TRUNC, \
-	// 	0700, 0);
-	// if (!setting->elapsed_time)
-	// {
-	// 	sem_close(setting->print_sem);
-	// 	sem_unlink(PRT_NAME);
-	// 	return(print_err(SEM_OPEN_FAIL) + ERROR);
-	// }
+	sem_unlink(DONE_NAME);
+	setting->done_sem = sem_open(DONE_NAME, O_CREAT | O_EXCL | O_TRUNC, \
+		0700, setting->num_philo);
+	if (!setting->done_sem)
+		return (print_err(SEM_OPEN_FAIL) + ERROR);
 	return (SUCCESS);
 }
 
@@ -72,9 +68,6 @@ static int	set_philo(t_setting *setting, int argc, char *argv[])
 int			ph_run(t_table *table)
 {
 	sem_t		*start;
-	pthread_t	monitor;
-	int			err;
-	void		*ret;
 
 	sem_unlink(START_NAME);
 	start = sem_open(START_NAME, O_CREAT | O_EXCL | O_TRUNC, 0777, 0);
@@ -82,12 +75,7 @@ int			ph_run(t_table *table)
 		return (print_err(SEM_OPEN_FAIL) + ERROR);
 	if (ph_run_process(table, start) != SUCCESS)
 		return (print_err("Something wrong!!!") + ERROR);
-	err = pthread_create(&monitor, NULL, ph_monitor, table);
-	if (err)
-		return (print_err(THR_CREAT_FAIL) +ERROR);
-	err = pthread_join(monitor, &ret);
-	if (ret != NULL)
-		return (print_err(THR_JOIN_FAIL) + ERROR);
+	write(1, "here",4 );
 	return (SUCCESS);
 }
 

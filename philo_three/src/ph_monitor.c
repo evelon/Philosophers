@@ -6,14 +6,13 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 14:07:14 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 18:24:17 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 22:50:08 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_three.h"
-#include <stdio.h>
 
-void	*ph_kill_monitor(void *param_table)
+static void	*ph_kill_monitor(void *param_table)
 {
 	t_table	*table;
 	int		i;
@@ -33,49 +32,50 @@ void	*ph_kill_monitor(void *param_table)
 		}
 	}
 	i = 0;
-	while (i < table->setting->num_philo)
-		sem_post(table->phs[i++].done);
+	if (table->done_monitor)
+		kill(-1 * table->done_monitor, SIGKILL);
 	return (NULL);
 }
 
-void	*ph_monitor(void *param_table)
+static void	ph_done_monitor(t_table *table)
 {
-	t_table		*table;
-	pthread_t	thread;
-	int			i;
+	pid_t	table_done;
+	int		wstatus;
 
-	pthread_create(&thread, NULL, ph_kill_monitor, param_table);
-	pthread_detach(thread);
-	table = (t_table *)param_table;
-	i = 0;
-	while (i < table->setting->num_philo)
-		sem_wait(table->phs[i++].done);
-	ph_kill_process(table->pids, table->setting->num_philo);
-	return (SUCCESS);
-}
-
-void	*ph_killer(void *param_philo)
-{
-	t_philo			*philo;
-	struct timeval	now;
-	int				err;
-
-	philo = (t_philo *)param_philo;
-	sem_wait(philo->killer);
 	while (1)
 	{
-		usleep(50);
-		if (philo->state == die)
-			return (NULL);
-		err = gettimeofday(&now, NULL);
-		if (err)
-			return ((void *)(long long)print_err(TIME_GET_FAIL));
-		if (ph_get_duration(philo->last_meal, now) >= philo->setting->time_die)
+		table_done = fork();
+		if (table_done == 0)
 		{
-			sem_print(ph_get_duration(philo->setting->start_time, \
-			now), die, philo);
+			sem_wait(table->setting->done_sem);
+			sem_post(table->setting->done_sem);
 			exit(0);
 		}
+		else
+		{
+			usleep(200);
+			waitpid(table_done, &wstatus, WNOHANG);
+			if (WIFEXITED(wstatus))
+				break;
+		}
 	}
-	return (NULL);
+	kill(table_done, SIGKILL);
+	exit(0);
+}
+
+int		ph_monitor(t_table *table)
+{
+	pthread_t	kill_monitor;
+	int			wstatus;
+
+	if (table->setting->num_must_eat > 0)
+	{
+		table->done_monitor = fork();
+		if (table->done_monitor == 0)
+			ph_done_monitor(table);
+	}
+	pthread_create(&kill_monitor, NULL, ph_kill_monitor, table);
+	pthread_detach(kill_monitor);
+	waitpid(table->done_monitor, &wstatus, 0);
+	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 16:51:13 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 18:30:36 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 19:21:16 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,10 @@ static int	eat_count(t_philo *philo)
 	static int 	count = 0;
 
 	count++;
+	sem_wait(philo->setting->done_sem);
 	if (count >= philo->setting->num_must_eat)
-		sem_post(philo->done);
+		return (SUCCESS);
+	sem_post(philo->setting->done_sem);
 	return (SUCCESS);
 }
 
@@ -48,7 +50,6 @@ int			sem_print(unsigned long ms, int action, t_philo *philo)
 	int				err;
 
 	sem_wait(philo->setting->print_sem);
-	// ms -= (unsigned long)*philo->setting->elapsed_time;
 	if (action == die)
 	{
 		philo->state = die;
