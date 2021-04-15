@@ -6,13 +6,11 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 12:58:54 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 15:31:07 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 17:22:20 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_three.h"
-
-
 
 int			ph_kill_process(pid_t *pids, int n)
 {
@@ -32,14 +30,55 @@ int			ph_kill_process(pid_t *pids, int n)
 	return (SUCCESS);
 }
 
+static int	set_start_time(t_setting *setting)
+{
+	struct timeval	now;
+	int				err;
+
+	err = gettimeofday(&now, NULL);
+	if (err)
+		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
+	setting->start_time = now;
+	return (SUCCESS);
+}
+
+static int	init_sem(sem_t *start, sem_t *killer, t_setting *setting)
+{
+	struct timeval	now;
+	int				err;
+	long			duration;
+	int				i;
+
+	err = gettimeofday(&now, NULL);
+	if (err)
+		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
+	duration = ph_get_duration(setting->start_time, now);
+	i = 0;
+	while (i < duration)
+	{
+		sem_post(setting->elapsed_time);
+		i++;
+	}
+	i = 0;
+	while (i < setting->num_philo)
+	{
+		sem_post(start);
+		sem_post(killer);
+		i++;
+	}
+	return (SUCCESS);
+}
+
 int			ph_run_process(t_table *table, sem_t *start)
 {
-	int		i;
-	pid_t	pid;
+	pid_t			pid;
+	int				i;
 
 	table->pids = ft_calloc(table->setting->num_philo, sizeof(pid_t));
 	if (!table->pids)
 		return (print_err(MALLOC_FAIL) + ERROR);
+	if (set_start_time(table->setting))
+		return (ERROR);
 	i = 0;
 	while (i < table->setting->num_philo)
 	{
@@ -48,11 +87,9 @@ int			ph_run_process(t_table *table, sem_t *start)
 			return (ph_kill_process(table->pids, --i) | ERROR);
 		if (pid == 0)
 			return (philo_process(&table->phs[i], start));
-		table->pids[i] = pid;
-		i++;
+		table->pids[i++] = pid;
 	}
-	i = 0;
-	while (i < table->setting->num_philo)
-		sem_post(start);
+	if (init_sem(start, table->phs->killer, table->setting))
+		return (ERROR);
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:39:15 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 15:39:25 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 17:40:51 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,29 @@ int			free_setting(t_setting *setting)
 		return (print_err(SEM_CLOSE_FAIL) + ERROR);
 	if (sem_unlink(PRT_NAME))
 		return (print_err(SEM_UNLINK_FAIL) + ERROR);
+	// if (sem_close(setting->elapsed_time))
+	// 	return (print_err(SEM_CLOSE_FAIL) + ERROR);
+	// if (sem_unlink(TIME_NAME))
+	// 	return (print_err(SEM_UNLINK_FAIL) + ERROR);
 	return (SUCCESS);
 }
 
 static int	init_setting(t_setting *setting)
 {
 	sem_unlink(PRT_NAME);
-	setting->print_sem = sem_open(PRT_NAME, O_CREAT | O_EXCL | O_TRUNC, 0700, \
-	1);
+	setting->print_sem = sem_open(PRT_NAME, O_CREAT | O_EXCL | O_TRUNC, \
+		0700, 1);
 	if (!setting->print_sem)
 		return (print_err(SEM_OPEN_FAIL) + ERROR);
+	// sem_unlink(TIME_NAME);
+	// setting->elapsed_time = sem_open(TIME_NAME, O_CREAT | O_EXCL | O_TRUNC, \
+	// 	0700, 0);
+	// if (!setting->elapsed_time)
+	// {
+	// 	sem_close(setting->print_sem);
+	// 	sem_unlink(PRT_NAME);
+	// 	return(print_err(SEM_OPEN_FAIL) + ERROR);
+	// }
 	return (SUCCESS);
 }
 

@@ -33,7 +33,7 @@ CC = gcc
 MKDIR = mkdir
 
 CFLAGS = -Wall -Werror -Wextra -pthread $(DEBUGF)
-DEBUGF = -g3 -fsanitize=address
+DEBUGF = -g3 #-fsanitize=address
 IFLAGS = -I$(INC_DIR)
 
 $(NAME): $(OBJ_DIR) $(OBJS)

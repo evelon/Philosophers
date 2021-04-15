@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 16:51:13 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 14:44:50 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 17:27:30 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int			sem_print(unsigned long ms, int action, t_philo *philo)
 	int				err;
 
 	sem_wait(philo->setting->print_sem);
+	// ms -= (unsigned long)*philo->setting->elapsed_time;
 	if (action == die)
 	{
 		philo->state = die;

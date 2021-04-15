@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:34:19 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 15:12:56 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 16:56:44 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@
 # define PRT_NAME "/print_sem"
 # define FORK_NAME "/fork_sem"
 # define START_NAME "/start_sem"
+# define KILLER_NAME "/killer_sem"
+# define TIME_NAME "/time_sem"
 
 /*
 ** t_setting represents setting of the simulation.
@@ -62,6 +64,7 @@ typedef struct		s_setting
 	int				num_must_eat;
 	struct timeval	start_time;
 	sem_t			*print_sem;
+	sem_t			*elapsed_time;
 }					t_setting;
 
 typedef enum		e_philo_st
@@ -79,6 +82,7 @@ typedef struct		s_philo
 	struct timeval	last_meal;
 	sem_t			*forks;
 	sem_t			*done;
+	sem_t			*killer;
 	t_setting		*setting;
 }					t_philo;
 
@@ -124,7 +128,6 @@ int					sem_print(unsigned long ms, int action, t_philo *philo);
 ** philo_process is the function first run after philosopher forked. it starts
 ** ph_killer and philosopher lifecycle.
 */
-
 int					philo_process(t_philo *philo, sem_t *start);
 
 /*
@@ -149,6 +152,7 @@ void				ph_sleep_precise(int ms);
 /*
 ** Print functions.
 */
+
 void				ft_putchar_fd(char c, int fd);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_putlu_fd(unsigned long n, int fd);
@@ -157,8 +161,9 @@ int					print_err(char *err_str);
 int					print_err_code(char *err_str, int err_code);
 
 /*
-** Util functions'
+** Util functions.
 */
+
 int					ft_atoi(const char *str);
 void				*ft_calloc(size_t count, size_t size);
 void				*free_null(void *ptr);

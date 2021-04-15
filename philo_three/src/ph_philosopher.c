@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 21:41:36 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 14:41:27 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 16:49:17 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ static int	philo_eat_sleep(t_philo *philo)
 	err = gettimeofday(&now, NULL);
 	if (err)
 		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
-	philo->last_meal = now;
 	if (act_on_fork(lay, philo))
 		return (ERROR);
 	ph_sleep_precise(philo->setting->time_slp);
@@ -42,10 +41,18 @@ static int	philo_liftcycle(t_philo *philo)
 
 static int	run_philo(t_philo *philo, sem_t *start_sem)
 {
+	// struct timeval	now;
+	// int				err;
+
 	sem_wait(start_sem);
+	// usleep((philo->setting->num_philo - philo->index) * 100);
+	// err = gettimeofday(&now, NULL);
+	// if (err)
+	// 	return (print_err_code(TIME_GET_FAIL, err) + ERROR);
+	// philo->setting->start_time = now;
 	philo->last_meal = philo->setting->start_time;
 	if (philo->index % 2 == 0)
-		usleep(50);
+		usleep(10);
 	while (1)
 		if (philo_liftcycle(philo) != SUCCESS)
 			break ;
@@ -54,15 +61,15 @@ static int	run_philo(t_philo *philo, sem_t *start_sem)
 
 int			philo_process(t_philo *philo, sem_t *start)
 {
-	pthread_t	killer;
-	void		*ret;
-	int			err;
+	pthread_t		thread;
+	void			*ret;
+	int				err;
 
-	err = pthread_create(&killer, NULL, ph_killer, philo);
+	err = pthread_create(&thread, NULL, ph_killer, philo);
 	if (err)
 		return (print_err_code(THR_CREAT_FAIL, err) + ERROR);
 	err = run_philo(philo, start);
-	pthread_join(killer, &ret);
+	pthread_join(thread, &ret);
 	if (ret != NULL)
 		return (print_err("Something wrong!!!") + ERROR);
 	return (err);

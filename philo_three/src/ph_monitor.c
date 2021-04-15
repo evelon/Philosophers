@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 14:07:14 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 15:03:42 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 16:22:56 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	*ph_killer(void *param_philo)
 	int				err;
 
 	philo = (t_philo *)param_philo;
+	sem_wait(philo->killer);
 	while (1)
 	{
 		usleep(50);

@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 20:01:14 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 15:13:23 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/15 17:20:01 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static char	*done_name(int n)
 	return (name);
 }
 
-static int	init_philosophers(t_table *table, sem_t *forks)
+static int	init_philosophers(t_table *table, sem_t *forks, sem_t *killer)
 {
 	int		i;
 	char	*phs_done_name;
@@ -53,11 +53,12 @@ static int	init_philosophers(t_table *table, sem_t *forks)
 		table->phs[i].index = i;
 		table->phs[i].setting = table->setting;
 		table->phs[i].forks = forks;
+		table->phs[i].killer = killer;
 		if (table->setting->num_must_eat > 0)
 		{
 			phs_done_name = done_name(i);
 			sem_unlink(phs_done_name);
-			table->phs[i].done = sem_open(done_name(i), \
+			table->phs[i].done = sem_open(phs_done_name, \
 			O_CREAT | O_EXCL | O_TRUNC, 0777, 0);
 		}
 		i++;
@@ -73,8 +74,8 @@ void		free_table(t_table *table, int err_code)
 			print_err(SEM_CLOSE_FAIL);
 		if (sem_unlink(FORK_NAME))
 			print_err(SEM_UNLINK_FAIL);
-		ph_kill_process(table->pids, table->setting->num_philo);
 	}
+	ph_kill_process(table->pids, table->setting->num_philo);
 	free(table->phs);
 	return ;
 }
@@ -82,6 +83,7 @@ void		free_table(t_table *table, int err_code)
 int			ph_set_table(t_table *table, t_setting *setting)
 {
 	sem_t	*forks;
+	sem_t	*killer;
 
 	table->setting = setting;
 	table->phs = ft_calloc(setting->num_philo, sizeof(t_philo));
@@ -92,6 +94,8 @@ int			ph_set_table(t_table *table, t_setting *setting)
 	setting->num_philo);
 	if (!forks)
 		return ((int)free_null(table->phs) + ERROR);
-	init_philosophers(table, forks);
+	sem_unlink(KILLER_NAME);
+	killer = sem_open(KILLER_NAME, O_CREAT | O_EXCL | O_TRUNC, 0777, 0);
+	init_philosophers(table, forks, killer);
 	return (SUCCESS);
 }
