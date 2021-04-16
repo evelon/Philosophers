@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:39:15 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 22:38:15 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 14:13:23 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,6 @@ int			free_setting(t_setting *setting)
 		return (print_err(SEM_CLOSE_FAIL) + ERROR);
 	if (sem_unlink(PRT_NAME))
 		return (print_err(SEM_UNLINK_FAIL) + ERROR);
-	// if (sem_close(setting->elapsed_time))
-	// 	return (print_err(SEM_CLOSE_FAIL) + ERROR);
-	// if (sem_unlink(TIME_NAME))
-	// 	return (print_err(SEM_UNLINK_FAIL) + ERROR);
 	return (SUCCESS);
 }
 
@@ -75,7 +71,6 @@ int			ph_run(t_table *table)
 		return (print_err(SEM_OPEN_FAIL) + ERROR);
 	if (ph_run_process(table, start) != SUCCESS)
 		return (print_err("Something wrong!!!") + ERROR);
-	write(1, "here",4 );
 	return (SUCCESS);
 }
 

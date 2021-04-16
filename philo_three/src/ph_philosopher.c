@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 21:41:36 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 22:39:13 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 14:13:39 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int	philo_eat_sleep(t_philo *philo)
 	if (err)
 		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
 	err = sem_print(ph_get_duration(philo->setting->start_time, now), \
-	think, philo);
+		think, philo);
 	return (err);
 }
 
@@ -67,14 +67,7 @@ static int	philo_liftcycle(t_philo *philo)
 
 static int	run_philo(t_philo *philo, sem_t *start_sem)
 {
-	// struct timeval	now;
-	// int				err;
-
 	sem_wait(start_sem);
-	// err = gettimeofday(&now, NULL);
-	// if (err)
-	// 	return (print_err_code(TIME_GET_FAIL, err) + ERROR);
-	// philo->setting->start_time = now;
 	philo->last_meal = philo->setting->start_time;
 	if (philo->index % 2 == 0)
 		usleep(10);

@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 16:51:13 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 19:21:16 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 14:14:27 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	print_ms_index(unsigned long ms, int index, int action)
 
 static int	eat_count(t_philo *philo)
 {
-	static int 	count = 0;
+	static int	count = 0;
 
 	count++;
 	sem_wait(philo->setting->done_sem);
@@ -62,7 +62,7 @@ int			sem_print(unsigned long ms, int action, t_philo *philo)
 	err = gettimeofday(&now, NULL);
 	if (err)
 		return (sem_post(philo->setting->print_sem) + \
-		print_err_code(TIME_GET_FAIL, err) + ERROR);
+			print_err_code(TIME_GET_FAIL, err) + ERROR);
 	if (action == eat)
 		philo->last_meal = now;
 	return (sem_post(philo->setting->print_sem));

@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 20:14:42 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 11:40:17 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 13:54:30 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,16 @@
 
 int	act_on_fork(enum e_action action, t_fork *fork, int stat)
 {
-	int	err;
-
 	if (stat != DINE)
 		return (SUCCESS);
-	err = pthread_mutex_lock(&fork->mutex);
-	if (err)
-		return (err);
+	if (pthread_mutex_lock(&fork->mutex))
+		return (ERROR);
 	if (action == take)
 	{
 		if (fork->state == taken)
 		{
-			err = pthread_mutex_unlock(&fork->mutex);
-			if (err)
-				return (err);
+			if (pthread_mutex_unlock(&fork->mutex))
+				return (ERROR);
 			return (FAIL);
 		}
 		fork->state = taken;

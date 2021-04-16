@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 21:56:51 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 18:22:06 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 13:48:56 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int			take_fork(int hand, t_philo *philo)
 		if (err == SUCCESS)
 		{
 			print_take(hand, philo);
-			break;
+			break ;
 		}
 		if (err != FAIL)
 			return (print_err_code(MUTEX_CONT_FAIL, err) + ERROR);
@@ -86,7 +86,7 @@ int			philo_eat_sleep(t_philo *philo)
 	if (err)
 		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
 	err = print_mutex(ph_get_duration(philo->setting->start_time, now), \
-	slp, philo);
+		slp, philo);
 	if (err != SUCCESS)
 		return (err);
 	ph_sleep_precise(philo->setting->time_slp);
@@ -94,6 +94,6 @@ int			philo_eat_sleep(t_philo *philo)
 	if (err)
 		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
 	err = print_mutex(ph_get_duration(philo->setting->start_time, now), \
-	think, philo);
+		think, philo);
 	return (err);
 }

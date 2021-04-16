@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:34:19 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 17:12:56 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 13:50:16 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 # define ERROR -1
 # define FAIL -27
 # define SUCCESS 0
-# define LEFT -5
-# define RIGHT -6
+# define LEFT 0
+# define RIGHT -1
 
 # define WAIT 0
 # define DINE -98
@@ -119,9 +119,12 @@ int					free_setting(t_setting *setting);
 int					print_mutex(unsigned long ms, int action, t_philo *philo);
 
 /*
-**
+** odd_philo runs a lifecycle of an odd philosopher.
 */
 void				*odd_philo(void *philo);
+/*
+** even_philo runs a lifecycle of an even philosopher.
+*/
 void				*even_philo(void *philo);
 int					take_fork(int hand, t_philo *philo);
 int					philo_eat_sleep(t_philo *philo);
@@ -148,6 +151,7 @@ void				ph_sleep_precise(int ms);
 /*
 ** Print functions
 */
+
 void				ft_putchar_fd(char c, int fd);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_putlu_fd(unsigned long n, int fd);
@@ -155,10 +159,10 @@ void				ft_putstr_fd(char *s, int fd);
 int					print_err(char *err_str);
 int					print_err_code(char *err_str, int err_code);
 
-
 /*
 ** Util functions
 */
+
 int					ft_atoi(const char *str);
 void				*ft_calloc(size_t count, size_t size);
 void				*free_null(void *ptr);

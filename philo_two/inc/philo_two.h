@@ -6,12 +6,12 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:34:19 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 14:08:59 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 14:11:41 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_THREE_H
-# define PHILO_THREe_H
+#ifndef PHILO_TWO_H
+# define PHILO_TWO_H
 
 # include <string.h>
 # include <stdlib.h>
@@ -110,9 +110,12 @@ int					free_setting(t_setting *setting);
 int					sem_print(unsigned long ms, int action, t_philo *philo);
 
 /*
-**
+** odd_philo runs a lifecycle of an odd philosopher.
 */
 void				*odd_philo(void *philo);
+/*
+** even_philo runs a lifecycle of an even philosopher.
+*/
 void				*even_philo(void *philo);
 int					philo_liftcycle(t_philo *philo);
 

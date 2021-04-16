@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 14:07:14 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 22:50:08 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 14:12:55 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	*ph_kill_monitor(void *param_table)
 	{
 		waitpid(table->pids[i++], &wstatus, WNOHANG);
 		if (WIFEXITED(wstatus))
-			break;
+			break ;
 		if (i == table->setting->num_philo)
 		{
 			usleep(50);
@@ -56,14 +56,14 @@ static void	ph_done_monitor(t_table *table)
 			usleep(200);
 			waitpid(table_done, &wstatus, WNOHANG);
 			if (WIFEXITED(wstatus))
-				break;
+				break ;
 		}
 	}
 	kill(table_done, SIGKILL);
 	exit(0);
 }
 
-int		ph_monitor(t_table *table)
+int			ph_monitor(t_table *table)
 {
 	pthread_t	kill_monitor;
 	int			wstatus;

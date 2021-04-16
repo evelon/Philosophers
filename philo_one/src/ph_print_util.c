@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 17:23:59 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/12 18:50:11 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 13:49:02 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void		ft_putlu_fd(unsigned long n, int fd)
 	putdigit_re(n, fd);
 }
 
-void	ft_putstr_fd(char *s, int fd)
+void		ft_putstr_fd(char *s, int fd)
 {
 	int	len;
 

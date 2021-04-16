@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 12:58:54 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 22:36:54 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 13:56:51 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,8 @@ static int	set_start_time(t_setting *setting)
 
 static int	init_sem(sem_t *start, sem_t *killer, t_setting *setting)
 {
-	// struct timeval	now;
-	// int				err;
-	// long			duration;
 	int				i;
 
-	// err = gettimeofday(&now, NULL);
-	// if (err)
-	// 	return (print_err_code(TIME_GET_FAIL, err) + ERROR);
-	// duration = ph_get_duration(setting->start_time, now);
-	// i = 0;
-	// while (i < duration)
-	// {
-	// 	sem_post(setting->elapsed_time);
-	// 	i++;
-	// }
 	i = 0;
 	while (i < setting->num_philo)
 	{

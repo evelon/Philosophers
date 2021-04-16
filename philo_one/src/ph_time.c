@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 21:45:01 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/13 19:54:35 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 14:07:07 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ unsigned long	ph_get_duration(struct timeval last, struct timeval now)
 	return (duration);
 }
 
-void	ph_sleep_precise(int ms)
+void			ph_sleep_precise(int ms)
 {
 	struct timeval	start;
 	struct timeval	now;

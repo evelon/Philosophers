@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 21:41:36 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 10:16:17 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 14:09:13 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,6 @@ void	*even_philo(void *philo)
 	usleep(100);
 	while (1)
 		if (philo_liftcycle(philo) != SUCCESS)
-			break  ;
+			break ;
 	return (NULL);
 }

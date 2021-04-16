@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:34:19 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 22:29:58 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 14:12:25 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ int					ph_run_process(t_table *table, sem_t *start);
 ** ate enough, and makes a thread for checking if any of philosophers died.
 */
 int					ph_monitor(t_table *table);
-
 
 int					ph_over(t_table *table);
 int					free_setting(t_setting *setting);

@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 21:56:51 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 15:25:40 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 14:05:25 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,27 +20,25 @@ static int	take_fork(int hand, t_philo *philo)
 	while (1)
 	{
 		if (hand == RIGHT)
-			err = act_on_fork(take, philo->right);
+			err = act_on_fork(take, philo->right, philo->setting->status);
 		else
-			err = act_on_fork(take, philo->left);
+			err = act_on_fork(take, philo->left, philo->setting->status);
 		if (err == SUCCESS)
 		{
 			err = gettimeofday(&now, NULL);
 			if (err)
 				return (print_err_code(TIME_GET_FAIL, err) + ERROR);
-			if ((philo->index % 2 == 1 && hand == LEFT) || \
-				(philo->index % 2 == 0 && hand == RIGHT))
+			if ((philo->index % 2 + hand))
 				print_mutex(ph_get_duration(philo->setting->start_time, now), \
-				take, philo);
+					take, philo);
 			else
 				print_mutex(ph_get_duration(philo->setting->start_time, now), \
-				eat, philo);
-			break;
+					eat, philo);
+			return (SUCCESS);
 		}
 		if (err != FAIL)
 			return (print_err_code(MUTEX_CONT_FAIL, err) + ERROR);
 	}
-	return (SUCCESS);
 }
 
 static int	lay_fork(t_philo *philo)

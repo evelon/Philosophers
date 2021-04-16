@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 14:37:20 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 17:08:29 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 14:06:55 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,17 +68,17 @@ static int	ph_init_threads(t_table *table, pthread_t **thrds)
 	*thrds = ft_calloc(table->setting->num_philo, sizeof(pthread_t));
 	if (!*thrds)
 		return (print_err(MALLOC_FAIL) + ERROR);
-	i = 0;
-	while (i < table->setting->num_philo)
+	i = -1;
+	while (++i < table->setting->num_philo)
 	{
 		if (i % 2 == 1)
 			err = pthread_create(&(*thrds)[i], NULL, odd_philo, &table->phs[i]);
 		else
-			err = pthread_create(&(*thrds)[i], NULL, even_philo, &table->phs[i]);
+			err = pthread_create(&(*thrds)[i], NULL, even_philo, \
+				&table->phs[i]);
 		if (err)
 			return (print_err_code(THR_CREAT_FAIL, err) + \
-			(int)free_null(*thrds) + ERROR);
-		i++;
+				(int)free_null(*thrds) + ERROR);
 	}
 	return (SUCCESS);
 }
