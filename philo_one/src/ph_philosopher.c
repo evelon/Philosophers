@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 21:41:36 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/14 17:13:05 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 15:41:45 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ static int	odd_philo_lifecycle(t_philo *philo)
 
 static int	even_philo_lifecycle(t_philo *philo)
 {
-	if (take_fork(RIGHT, philo) != SUCCESS)
-		return (ERROR);
 	if (take_fork(LEFT, philo) != SUCCESS)
+		return (ERROR);
+	if (take_fork(RIGHT, philo) != SUCCESS)
 		return (ERROR);
 	return (philo_eat_sleep(philo));
 }
@@ -63,6 +63,7 @@ void		*even_philo(void *philo)
 		if (cast->setting->status != WAIT)
 			break ;
 	}
+	usleep(100);
 	cast->last_meal = *time;
 	while (1)
 		if (even_philo_lifecycle(philo) != SUCCESS)
