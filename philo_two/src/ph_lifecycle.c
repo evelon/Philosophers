@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 21:56:51 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/15 10:34:28 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 15:46:26 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,6 @@ static int	philo_eat_sleep(t_philo *philo)
 	int				err;
 
 	ph_sleep_precise(philo->setting->time_eat);
-	err = gettimeofday(&now, NULL);
-	if (err)
-		return (print_err_code(TIME_GET_FAIL, err) + ERROR);
-	philo->last_meal = now;
 	if (act_on_fork(lay, philo))
 		return (ERROR);
 	ph_sleep_precise(philo->setting->time_slp);

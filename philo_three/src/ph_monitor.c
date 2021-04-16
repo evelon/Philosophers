@@ -6,7 +6,7 @@
 /*   By: jolim <jolim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 14:07:14 by jolim             #+#    #+#             */
-/*   Updated: 2021/04/16 14:12:55 by jolim            ###   ########.fr       */
+/*   Updated: 2021/04/16 16:53:17 by jolim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,25 +37,39 @@ static void	*ph_kill_monitor(void *param_table)
 	return (NULL);
 }
 
-static void	ph_done_monitor(t_table *table)
+static int	ph_done_monitor_parent(pid_t table_done, unsigned char n)
 {
-	pid_t	table_done;
-	int		wstatus;
+	int				wstatus;
 
+	waitpid(table_done, &wstatus, WNOHANG);
+	if (WEXITSTATUS(wstatus) != n)
+		return (ALL_ATE);
+	usleep(1000);
+	return (SUCCESS);
+}
+
+static int	ph_done_monitor(t_table *table)
+{
+	pid_t			table_done;
+	int				err;
+	unsigned char	n;
+
+	n = 0;
 	while (1)
 	{
+		n++;
 		table_done = fork();
 		if (table_done == 0)
 		{
 			sem_wait(table->setting->done_sem);
 			sem_post(table->setting->done_sem);
-			exit(0);
+			exit((int)n);
 		}
 		else
 		{
-			usleep(200);
-			waitpid(table_done, &wstatus, WNOHANG);
-			if (WIFEXITED(wstatus))
+			usleep(1000);
+			err = ph_done_monitor_parent(table_done, n);
+			if (err == ALL_ATE || err == ERROR)
 				break ;
 		}
 	}
